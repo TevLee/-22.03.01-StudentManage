@@ -15,10 +15,12 @@ public class Main {
         inputStudentInfo(sc, studentId, studentList);
 
         /*석차구하기(StudentMgm.getRank) + 조회*/
-        getRankShowStudentInfo(studentList);
+        StudentMgm.getRank(studentList);
+        showStudentsInfo(studentList);
 
         /*성적순 정렬(StudentMgm.sortByScore) + 조회*/
-        showSortedResult(studentList);
+        StudentMgm.sortByScore(studentList);
+        showStudentsInfo(studentList);
     }
 
 
@@ -31,21 +33,37 @@ public class Main {
                 System.out.println("유효하지 않은 이름 입니다.");
                 continue;
             }
-
-            System.out.print("점수(국.영.수) : ");
-            Integer[] scores = Arrays.stream(sc.nextLine().split(" "))// 공백으로 받은 결과를
-                    .map((score) -> Integer.parseInt(score))                // integer로 casting하고
-                    .toArray(Integer[]::new);                               // Integer 배열로 변경
-            if (!CheckCollectInput.checkScores(scores)) {                   //유효하지않으면 다시입력
-                System.out.println("유효하지 않은 점수 입력입니다.");
-                continue;
+            Integer[] scores=null;
+            while(scores==null) {
+                try {
+                    System.out.print("점수(국.영.수) : ");
+                    scores = Arrays.stream(sc.nextLine().split(" "))// 공백으로 받은 결과를
+                            .map(Integer::parseInt)                // integer로 casting하고
+                            .toArray(Integer[]::new);                               // Integer 배열로 변경
+                    if (!CheckCollectInput.checkScores(scores)) {                   //유효하지않으면 다시입력
+                        System.out.println("유효하지 않은 점수 입력입니다.");
+                        scores=null;
+                    }
+                }catch (Exception e){
+                    scores=null;
+                    e.printStackTrace();
+                }
             }
 
-            System.out.print("주소 : ");
-            String addr = sc.nextLine();
-            if (!CheckCollectInput.checkAddress(addr)) {
-                System.out.println("유효하지 않은 주소 입력입니다.");
-                continue;
+            String addr = null;
+            while(addr==null) {
+                try {
+                    System.out.print("주소 : ");
+                    addr = sc.nextLine();
+                    if (!CheckCollectInput.checkAddress(addr)) {
+                        System.out.println("유효하지 않은 주소 입력입니다.");
+                        addr=null;
+                    }
+                }
+                catch (Exception e){
+                    addr=null;
+                    e.printStackTrace();
+                }
             }
 
             // student 객체 생성 --> studentList에 추가
@@ -58,27 +76,14 @@ public class Main {
         }
     }
 
-
-    private static void showSortedResult(List<Student> studentList) {
-        StudentMgm.sortByScore(studentList);
-        System.out.println("석차 순으로 정렬한 결과입니다.");
+    private static void showStudentsInfo(List<Student> studentList){ // FB : 학생정보 출력은 하나의 메서드로...
+        System.out.println("학생 정보입니다.");
         for (Student student : studentList) {
             System.out.print("석차 = " + student.getRank() + " ");
             System.out.print("학번 = " + student.getStudentId() + " ");
-            System.out.print("이름 = " + student.getName() + " ,");
-            System.out.print("총점 = " + student.getTotal());
+            System.out.print("이름 = " + student.getName() + " ");
+            System.out.print("총점 = " + student.getTotal()+" ");
             System.out.println("주소 = " + student.getAddr());
         }
     }
-
-    private static void getRankShowStudentInfo(List<Student> studentList) {
-        StudentMgm.getRank(studentList);
-        for (Student student : studentList) {
-            System.out.print("학번 = " + student.getStudentId() + " ");
-            System.out.print("석차 = " + student.getRank() + " ");
-            System.out.print("이름 = " + student.getName() + " ,");
-            System.out.println("총점 = " + student.getTotal());
-        }
-    }
-
 }

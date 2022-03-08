@@ -4,9 +4,9 @@ public class Student {
     //.. FB : 객체 클래스 내부의 변수들은 일반적으로 private으로 선언
     private int studentId;
     private String name;
-    private Integer[] scores;
+    private final Integer[] scores;
     private int total;
-    private float avg;
+    private final double avg;
     private int rank;
     private String addr;
 
@@ -34,7 +34,7 @@ public class Student {
         return scores;
     }
 
-    public float getAvg() {
+    public double getAvg() {
         return avg;
     }
 
@@ -69,7 +69,7 @@ public class Student {
         return Stream.of(scores).mapToInt(num -> num).sum();
     }
 
-    private float totalToAvg(int total, int subjectCnt) {
-        return total / subjectCnt;
+    private double totalToAvg(int total, int subjectCnt) { // FB : 정수 / 정수 --> 정수 / 실수
+        return total / (double)subjectCnt;
     }
 }
